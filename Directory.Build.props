@@ -1,0 +1,34 @@
+<Project>
+  <!-- Override Project Settings -->
+  <PropertyGroup>
+    <!-- Folder containing SpaceEngineers2.exe -->
+    <Game2></Game2>
+
+    <!-- Pulsar folder to deploy the plugin into after each build (empty = no deployment),
+         for example $(APPDATA)\Pulsar on Windows or $(HOME)/.config/Pulsar on Linux -->
+    <Pulsar></Pulsar>
+  </PropertyGroup>
+
+  <!-- Plugin version (committed, shared by all contributors) -->
+  <Import Project="$(MSBuildThisFileDirectory)Version.Build.props" />
+
+  <!-- Local developer overrides for the settings above; ignored by Git (*.user).
+       Copy the first PropertyGroup of this file into Directory.Build.props.user
+       and fill in your local paths there. Running setup.py writes it for you. -->
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Build.props.user"
+          Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.props.user')" />
+
+  <!-- Default Project Settings -->
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <Game2 Condition="'$(Game2)' == ''">$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1133870@InstallLocation)\Game2</Game2>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <Game2 Condition="'$(Game2)' == '' and '$(HOME)' != ''">$(HOME)/.steam/steam/steamapps/common/SpaceEngineers2/Game2</Game2>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Pulsar)' != ''">
+    <!-- Local plugin DLL deployment folder -->
+    <LocalDeploymentDir Condition="'$(LocalDeploymentDir)' == ''">$(Pulsar)/Modern/Local</LocalDeploymentDir>
+  </PropertyGroup>
+</Project>
