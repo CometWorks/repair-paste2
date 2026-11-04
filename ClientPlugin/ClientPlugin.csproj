@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>ClientPluginTemplate</AssemblyName>
+    <AssemblyName>RepairPaste</AssemblyName>
   </PropertyGroup>
 
   <Target Name="Verify" BeforeTargets="PrepareForBuild">

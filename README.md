@@ -1,170 +1,49 @@
-# Space Engineers 2 Client Plugin Template
+# Repair Paste
 
-## Prerequisites
+Space Engineers 2 client plugin that pastes a blueprint over the ship it was made
+from, so the blocks destroyed on the ship can be re-placed from its blueprint.
 
-- [Space Engineers 2](https://store.steampowered.com/app/1133870/Space_Engineers_2/)
-- [Python 3.12](https://python.org) (requires 3.12 or newer)
-- [Pulsar](https://github.com/SpaceGT/Pulsar)
-- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
+The game's paste tool refuses to place a blueprint where any of its blocks would
+overlap an existing one. With this plugin, when the paste tool aims at a ship which
+matches the blueprint:
 
-Both Windows and Linux are supported for developing the plugin. On Linux the game itself
-runs natively, launched by Pulsar's `Modern.bin` with the
-[LinuxCompat](https://github.com/CometWorks/linux-compat2) plugin, and the plugin builds and
-deploys natively too.
+- The preview snaps onto the ship, in the rotation and position where the most
+  blueprint blocks match the ship's blocks (same block type, cells and orientation).
+- Placing it keeps the blocks already there as they are (damage, color, settings)
+  and places only the blueprint blocks whose cells are empty.
+- Sub-grids of the blueprint (rotor, piston and hinge tops with their blocks) are
+  left out of a repair paste.
 
-## Create your plugin project
+## Usage
 
-1. Click on **Use this template** (top right corner on GitHub) and follow the wizard to create your repository
-2. Clone your repository to have a local working copy
-3. Run `setup.py`, enter the name of your plugin project in `CapitalizedWords` format
-4. Let `setup.py` auto-detect your installation location or fill it in manually
-5. Open the solution in Visual Studio or Rider
-6. Make a test build
-7. Add the repository to Pulsar as a development folder (see below) and test that the empty plugin
-   can be enabled (use the `Modern` executable of Pulsar to run SE2)
-8. Replace the contents of this file with the description of your plugin
-9. Follow the `TODO` comments in the source file and implement your plugin
+1. Have the ship as a blueprint, or copy it (Ctrl+C) while it is intact.
+2. Load it into the paste tool (Place on the blueprint's details, or Ctrl+V for a copy).
+3. Aim at the damaged ship. The preview jumps onto it.
+4. Place it.
 
-In case of questions, please feel free to ask the SE2 plugin developer community on the
-[Pulsar](https://discord.gg/z8ZczP2YZY) Discord server via their relevant text channels. 
-They also have dedicated channels for plugin ideas, should you look for a new one.
+Aiming away from the ship turns the snapping off, so the blueprint can still be
+pasted next to the ship as usual.
 
-_Good luck!_
+## Safety
 
-## Remarks
+A paste over existing blocks only goes ahead if the blueprint blocks landing on
+taken cells are almost all (90%) the same blocks the ship has there. A blueprint of
+another ship, or one not aligned with the ship, is refused like in the vanilla game.
+Otherwise it would fill the empty cells of the ship with blocks in the wrong places.
 
-### Plugin version
+## Settings
 
-The plugin version lives in `Version.Build.props`, which **is** committed and imported by
-`Directory.Build.props`. Keeping the version separate from the local path overrides means it
-is shared by all contributors and stays under version control. Bump the version there.
+- **Enabled**: off means the vanilla paste tool.
 
-### Folder path overrides
+## How it works
 
-`Directory.Build.props` **is** committed and declares the overridable folder paths with empty
-defaults:
+When the paste is sent, the blueprint blocks whose cells are taken are removed from
+the pasted copy, so the server gets only the missing blocks and checks them like any
+other paste (mount points, collisions, PCU, ownership). A server without the plugin
+accepts it as well.
 
-- `Game2` &mdash; the folder containing `SpaceEngineers2.exe`
-- `Pulsar` &mdash; the Pulsar folder the plugin is deployed into after each build, empty by default
-  (see [Deployment](#deployment))
+## Development
 
-It optionally imports `Directory.Build.props.user` from the repository root, which is **not
-committed** (matched by `*.user` in `.gitignore`), so each contributor keeps their own local
-paths there.
-
-To override a path manually, copy the first `PropertyGroup` of `Directory.Build.props` into
-`Directory.Build.props.user`, wrapped into a top-level `<Project>` element, and fill in your
-paths. `setup.py` writes that file for you with the auto-detected install location, creating
-it if needed and keeping any other overrides already in it.
-
-Leaving `Game2` empty (or having no `Directory.Build.props.user` at all) falls back to the
-platform default declared after that import: the Steam install of the game (from the
-registry on Windows, under `~/.steam/steam` on Linux). If your Steam library lives elsewhere,
-run `setup.py` or set the path yourself; the default is not searched for.
-
-A `Verify` target checks `Game2` before the build, so a wrong or missing one fails with
-a clear message instead of a wall of unresolved references.
-
-### Deployment
-
-Builds don't deploy anything by default. Load your working copy through a Pulsar development
-folder instead (see below), which compiles the plugin from source when the game starts.
-
-A deployed DLL shows up in Pulsar as a separate local plugin. If you later disable the development
-folder, that stale copy can still be enabled and shadow the published version of your plugin.
-
-To deploy anyway, set `Pulsar` in `Directory.Build.props.user`, for example to
-`$(APPDATA)\Pulsar` on Windows or `$(HOME)/.config/Pulsar` on Linux, or pass it to a single build
-with `dotnet build -p:Pulsar=...`. Each successful build then copies the plugin DLL into
-`<Pulsar>/Modern/Local`.
-
-### Debugging
-
-- Always use a debug build if you want to set breakpoints and see variable values.
-- A debug build defines `DEBUG`, so you can add conditional code in `#if DEBUG` blocks.
-- If breakpoints do not "stick" or do not work, then make sure that:
-  - The debugger is attached to the running process.
-  - You are debugging the code which is running.
-
-### How to use a development folder to build the sources by Pulsar
-
-- Start the game with the `Modern` Pulsar executable (`Modern.exe` on Windows, `Modern.bin` on Linux)
-  with the `-sources` command line option.
-- Click on the **Sources** button in Pulsar's dialog, then set up a development folder for your plugin.
-- Make sure to fill in the PluginHub registration XML (`ClientPluginTemplate.xml` in this repo) and load that as well.
-- Select `Debug` mode and run `Modern`, then attach the debugger. That should allow debugging your plugin.
-- Select `Release` mode to test exactly how Pulsar will build and run your plugin on the player's machine.
-- The registered development folder shows up as a plugin you can select in the plugin list and save into a profile.
-
-### Settings UI
-
-The template ships with an attribute-driven Settings UI generator — mark the
-properties on `Config` with the built-in attributes (`[Checkbox]`, `[Slider]`,
-`[Textbox]`, `[Dropdown]`, `[Color]`, `[Keybind]`, `[Button]`, `[Separator]`)
-and the settings dialog is rendered automatically. See
-[ClientPlugin/Settings/Settings.md](ClientPlugin/Settings/Settings.md) for the
-full reference.
-
-![Config Dialog Example](Docs/ConfigDialogExample.png)
-
-### Accessing internal, protected and private members in game code
-
-Enable the Krafs publicizer to significantly reduce the number of reflections you need to write.
-
-This can be done by systematically uncommenting the code sections marked with "Uncomment to enable publicizer support".
-Make sure not to miss any of those. List the game assemblies you need to publicize in `GameAssembliesToPublicize.cs`.
-In case of problems, read about the [Krafs Publicizer](https://github.com/krafs/Publicizer) or reach out on the [Pulsar](https://discord.gg/z8ZczP2YZY) Discord server.
-
-### Preloader patching
-
-Preloader patching is a "last resort" solution which changes the IL code before the game assemblies are even loaded.
-Use preloader patching only if none of the other methods work. For example, if you have to change type or method
-signatures in the game assemblies or have to change code before static constructors run.
-
-If any plugin selected in Pulsar is using any preloader patches, then the loading of the game is slower.
-If a game assembly has one patch, then having more patches to the same assembly is nearly free.
-
-Uncomment the code in `ExamplePrepatch.cs`, read the comments there and understand how it works.
-
-#### Limitations
-
-It is relatively hard to write a preloader patch correctly, since all changes have to be done in IL code without 
-importing any of the game assemblies. You cannot directly reference game assemblies from preloader patches, but
-can write IL code referencing them once the assembly will be loaded. The `Finish` method is safe to refer game
-assemblies, because that runs after all the preloader patches.
-
-The Mono.Cecil library cannot write "mixed mode" assemblies used by the game for ReadyToRun (R2R) support.
-It has been worked around in Pulsar by clearing the R2R precompiled code from the assemblies if preloader
-patching is used. In the future the Mono.Cecil may be replaced with a different library as a proper solution.
-
-### AI-assisted plugin development
-
-There is an [AGENTS.md](AGENTS.md) file in this repository. Make sure your coding agent reads this file before working on the code.
-
-Please consider using [se2-dev-skills](https://github.com/CometWorks/skills2/) for better outcomes.
-
-### Troubleshooting
-
-- If the IDE looks confused, then restarting the IDE and the debugged game usually works.
-- If the restart did not work, then try to clear caches in the IDE and restart it.
-- If the built DLL fails to deploy, then stop the game first, because it locks the old DLL file which prevents overwriting it.
-
-### Release
-
-- Always test your RELEASE build before publishing. Sometimes it behaves differently.
-- Always make your final release from a RELEASE build. (More optimized, removes debug code.)
-- In the case of client plugins, Pulsar compiles your code on the player's machine, so no need for a binary release.
-- You should deliver any additional files as assets (see Assets folder) and instead of downloading them directly.
-
-### Communication
-
-- In your documentation always include how players should report bugs.
-- Try to be reachable and respond in a timely manner over your communication channels.
-- Be open for constructive criticism.
-
-### Abandoning your project
-
-- Always consider finding a new maintainer, ask around at least once.
-- If you ever abandon the project, then make it clear on its GitHub page.
-- You may want to archive the repository.
-- Keep the code available on GitHub, so it can be forked and continued by other developers.
+Built from the [client2-plugin-template](https://github.com/CometWorks/client2-plugin-template).
+Run `setup.py` to point `Directory.Build.props.user` to the game, then add the
+working copy to Pulsar as a development folder.
