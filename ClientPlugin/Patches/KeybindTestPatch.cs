@@ -66,17 +66,18 @@ public static class KeybindTestPatch
 
             var mainKey = new DigitalInput(binding.Vk, GenericDeviceClass.Keyboard);
             var pressed =
-                mainKey.IsActive(keyboard) &&
-                KeyboardInputs.Control.IsActive(keyboard) == binding.Ctrl &&
-                KeyboardInputs.Alt.IsActive(keyboard) == binding.Alt &&
-                KeyboardInputs.Shift.IsActive(keyboard) == binding.Shift;
+                mainKey.IsActive(keyboard)
+                && KeyboardInputs.Control.IsActive(keyboard) == binding.Ctrl
+                && KeyboardInputs.Alt.IsActive(keyboard) == binding.Alt
+                && KeyboardInputs.Shift.IsActive(keyboard) == binding.Shift;
 
             if (pressed && !wasPressed)
             {
                 var notification = new NotificationViewModel(
                     title: Plugin.Name,
                     content: $"Keybind pressed: {binding}",
-                    timeout: TimeSpan.FromSeconds(3));
+                    timeout: TimeSpan.FromSeconds(3)
+                );
                 inGameUI.DisplayNotification(notification);
                 Log.Default.WriteLine($"[{Plugin.Name}] Keybind pressed: {binding}");
             }
@@ -85,7 +86,10 @@ public static class KeybindTestPatch
         }
         catch (Exception e)
         {
-            Log.Default.WriteLine(LogSeverity.Error, $"[{Plugin.Name}] KeybindTestPatch failed: {e}");
+            Log.Default.WriteLine(
+                LogSeverity.Error,
+                $"[{Plugin.Name}] KeybindTestPatch failed: {e}"
+            );
         }
     }
 }

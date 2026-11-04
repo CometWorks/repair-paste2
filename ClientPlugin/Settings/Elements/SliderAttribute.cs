@@ -21,7 +21,14 @@ internal class SliderAttribute : Attribute, IElement
     public readonly string Label;
     public readonly string Description;
 
-    public SliderAttribute(double min, double max, double step = 1.0, SliderType type = SliderType.Float, string label = null, string description = null)
+    public SliderAttribute(
+        double min,
+        double max,
+        double step = 1.0,
+        SliderType type = SliderType.Float,
+        string label = null,
+        string description = null
+    )
     {
         Min = min;
         Max = max;
@@ -55,5 +62,6 @@ internal class SliderAttribute : Attribute, IElement
         return RowBuilder.NewRow(Tools.Tools.GetLabelOrDefault(name, Label), Description, slider);
     }
 
-    public List<Type> SupportedTypes { get; } = new() { typeof(int), typeof(float), typeof(double) };
+    public List<Type> SupportedTypes { get; } =
+        new() { typeof(int), typeof(float), typeof(double) };
 }

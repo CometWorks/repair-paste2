@@ -40,6 +40,8 @@ public static class GameModeSessionComponentPatch
             return;
 
         // Your logic to run after the original method implementation.
-        Log.Default.WriteLine($"[{Plugin.Name}] IsCreative result for identity {identity}: {__result}");
+        Log.Default.WriteLine(
+            $"[{Plugin.Name}] IsCreative result for identity {identity}: {__result}"
+        );
     }
 }

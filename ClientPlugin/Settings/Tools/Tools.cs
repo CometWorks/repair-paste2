@@ -10,7 +10,10 @@ namespace ClientPlugin.Settings.Tools;
 
 public static class Tools
 {
-    private static readonly Regex UpperCaseWordRegex = new Regex(@"[A-Z][a-z]*", RegexOptions.Compiled);
+    private static readonly Regex UpperCaseWordRegex = new Regex(
+        @"[A-Z][a-z]*",
+        RegexOptions.Compiled
+    );
     private static readonly Regex RxHexDigits = new Regex("^[0-9a-f]+$", RegexOptions.IgnoreCase);
 
     // Avalonia's Fluent ToolTip trims text after a default MaxWidth, so wrap the description
@@ -18,14 +21,18 @@ public static class Tools
     // the popup doesn't inherit a smaller size from the control it's attached to.
     public static void SetWrappedTooltip(Control control, string text)
     {
-        if (string.IsNullOrEmpty(text)) return;
-        ToolTip.SetTip(control, new TextBlock
-        {
-            Text = text,
-            TextWrapping = TextWrapping.Wrap,
-            MaxWidth = 500,
-            FontSize = 20,
-        });
+        if (string.IsNullOrEmpty(text))
+            return;
+        ToolTip.SetTip(
+            control,
+            new TextBlock
+            {
+                Text = text,
+                TextWrapping = TextWrapping.Wrap,
+                MaxWidth = 500,
+                FontSize = 20,
+            }
+        );
     }
 
     public static string GetLabelOrDefault(string name, string label = null)
@@ -57,7 +64,12 @@ public static class Tools
         {
             if (digits.Length == 3)
             {
-                color = AvaloniaColor.FromArgb(255, ExpandNibble(digits[0]), ExpandNibble(digits[1]), ExpandNibble(digits[2]));
+                color = AvaloniaColor.FromArgb(
+                    255,
+                    ExpandNibble(digits[0]),
+                    ExpandNibble(digits[1]),
+                    ExpandNibble(digits[2])
+                );
                 return true;
             }
             if (digits.Length == 6)
@@ -66,7 +78,8 @@ public static class Tools
                     255,
                     Convert.ToByte(digits.Substring(0, 2), 16),
                     Convert.ToByte(digits.Substring(2, 2), 16),
-                    Convert.ToByte(digits.Substring(4, 2), 16));
+                    Convert.ToByte(digits.Substring(4, 2), 16)
+                );
                 return true;
             }
         }
@@ -82,7 +95,12 @@ public static class Tools
         {
             if (digits.Length == 4)
             {
-                color = AvaloniaColor.FromArgb(ExpandNibble(digits[3]), ExpandNibble(digits[0]), ExpandNibble(digits[1]), ExpandNibble(digits[2]));
+                color = AvaloniaColor.FromArgb(
+                    ExpandNibble(digits[3]),
+                    ExpandNibble(digits[0]),
+                    ExpandNibble(digits[1]),
+                    ExpandNibble(digits[2])
+                );
                 return true;
             }
             if (digits.Length == 8)
@@ -91,7 +109,8 @@ public static class Tools
                     Convert.ToByte(digits.Substring(6, 2), 16),
                     Convert.ToByte(digits.Substring(0, 2), 16),
                     Convert.ToByte(digits.Substring(2, 2), 16),
-                    Convert.ToByte(digits.Substring(4, 2), 16));
+                    Convert.ToByte(digits.Substring(4, 2), 16)
+                );
                 return true;
             }
         }
@@ -102,9 +121,11 @@ public static class Tools
 
     private static string NormalizeHex(string hex)
     {
-        if (string.IsNullOrEmpty(hex)) return null;
+        if (string.IsNullOrEmpty(hex))
+            return null;
         var trimmed = hex.Trim();
-        if (trimmed.StartsWith("#")) trimmed = trimmed.Substring(1);
+        if (trimmed.StartsWith("#"))
+            trimmed = trimmed.Substring(1);
         return RxHexDigits.IsMatch(trimmed) ? trimmed : null;
     }
 

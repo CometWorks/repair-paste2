@@ -22,19 +22,18 @@ public static class ExamplePrepatch
 
         // TODO: Filter for the type to patch (FullName includes the namespace)
         var type = asmDef.MainModule.Types.First(t =>
-            t.FullName == "Keen.Game2.Client.RuntimeSystems.Analytics.SessionComponents.AnalyticsSessionComponent"
+            t.FullName
+            == "Keen.Game2.Client.RuntimeSystems.Analytics.SessionComponents.AnalyticsSessionComponent"
         );
 
         // TODO: Filter for the member to patch
-        var method = type.Methods.First(m =>
-            m.Name == "UpdatePlayerPosition"
-        );
+        var method = type.Methods.First(m => m.Name == "UpdatePlayerPosition");
 
         var il = method.Body.Instructions;
-        
+
         // Record original IL code (debug only)
         il.RecordOriginalCode(method);
-        
+
         // TODO: Optional: Ensure that game's code hasn't changed.
         il.VerifyCodeHash(method, "4e2797a2");
 

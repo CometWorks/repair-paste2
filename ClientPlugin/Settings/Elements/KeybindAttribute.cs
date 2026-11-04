@@ -40,25 +40,34 @@ internal class KeybindAttribute : Attribute, IElement
 
         button.PointerReleased += (_, e) =>
         {
-            if (e.InitialPressMouseButton != Avalonia.Input.MouseButton.Right) return;
+            if (e.InitialPressMouseButton != Avalonia.Input.MouseButton.Right)
+                return;
             setter(new Binding());
             button.Content = ((Binding)getter()).ToString();
             e.Handled = true;
         };
 
-        var tooltip = (string.IsNullOrEmpty(Description) ? "" : Description + "\n") +
-                      "Click to bind a key (press Esc to cancel). Right-click to clear.";
+        var tooltip =
+            (string.IsNullOrEmpty(Description) ? "" : Description + "\n")
+            + "Click to bind a key (press Esc to cancel). Right-click to clear.";
         return RowBuilder.NewRow(label, tooltip, button);
     }
 
-    private void OpenCompositionDialog(string label, Func<object> getter, Action<object> setter, Button button)
+    private void OpenCompositionDialog(
+        string label,
+        Func<object> getter,
+        Action<object> setter,
+        Button button
+    )
     {
         var sharedUi = GameAccess.GetSharedUI();
         var factory = GameAccess.GetViewModelFactory();
         if (sharedUi == null || factory == null)
         {
-            Log.Default.WriteLine(LogSeverity.Warning,
-                $"[{Plugin.Name}] Cannot open keybind dialog: SharedUI or ViewModelFactory unavailable");
+            Log.Default.WriteLine(
+                LogSeverity.Warning,
+                $"[{Plugin.Name}] Cannot open keybind dialog: SharedUI or ViewModelFactory unavailable"
+            );
             return;
         }
 
@@ -77,7 +86,8 @@ internal class KeybindAttribute : Attribute, IElement
                 button.Content = newBinding.ToString();
             },
             onCancelled: () => { },
-            factory: factory);
+            factory: factory
+        );
 
         sharedUi.ShowDialog(dialog);
     }

@@ -10,7 +10,11 @@ internal class SettingsScreenViewModel : ScreenViewModel
     public Action<StackPanel> BuildContent { get; }
     public Action OnClosed { get; }
 
-    public SettingsScreenViewModel(string title, Action<StackPanel> buildContent, Action onClosed = null)
+    public SettingsScreenViewModel(
+        string title,
+        Action<StackPanel> buildContent,
+        Action onClosed = null
+    )
     {
         KeepsOtherScreensVisible = false;
         AllowsInputBelowUI = false;

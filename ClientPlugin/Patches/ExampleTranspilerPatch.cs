@@ -17,7 +17,11 @@ public static class CharacterHUDStatusViewModelPatch
     // ReSharper disable once UnusedMember.Local
     [HarmonyTranspiler]
     [HarmonyPatch("Update")]
-    private static IEnumerable<CodeInstruction> UpdateTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase patchedMethod, ILGenerator ilGenerator)
+    private static IEnumerable<CodeInstruction> UpdateTranspiler(
+        IEnumerable<CodeInstruction> instructions,
+        MethodBase patchedMethod,
+        ILGenerator ilGenerator
+    )
     {
         // Make your patch configurable.
         // Here it needs restarting the game, since patching happens only once.

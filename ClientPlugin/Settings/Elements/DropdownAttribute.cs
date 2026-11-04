@@ -12,8 +12,14 @@ internal class DropdownAttribute : Attribute, IElement
     public readonly string Label;
     public readonly string Description;
 
-    private static readonly Regex UnCamelCaseRegex1 = new(@"(\P{Ll})(\P{Ll}\p{Ll})", RegexOptions.Compiled);
-    private static readonly Regex UnCamelCaseRegex2 = new(@"(\p{Ll})(\P{Ll})", RegexOptions.Compiled);
+    private static readonly Regex UnCamelCaseRegex1 = new(
+        @"(\P{Ll})(\P{Ll}\p{Ll})",
+        RegexOptions.Compiled
+    );
+    private static readonly Regex UnCamelCaseRegex2 = new(
+        @"(\p{Ll})(\P{Ll})",
+        RegexOptions.Compiled
+    );
 
     public DropdownAttribute(string label = null, string description = null)
     {
@@ -39,11 +45,13 @@ internal class DropdownAttribute : Attribute, IElement
         };
 
         for (var i = 0; i < names.Length; i++)
-            comboBox.Items.Add(new ComboBoxItem
-            {
-                Content = new TextBlock { Text = UnCamelCase(names[i]), FontSize = 18 },
-                Tag = values.GetValue(i),
-            });
+            comboBox.Items.Add(
+                new ComboBoxItem
+                {
+                    Content = new TextBlock { Text = UnCamelCase(names[i]), FontSize = 18 },
+                    Tag = values.GetValue(i),
+                }
+            );
 
         for (var i = 0; i < names.Length; i++)
         {

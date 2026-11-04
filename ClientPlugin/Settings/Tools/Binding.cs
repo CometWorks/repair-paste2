@@ -34,7 +34,9 @@ public struct Binding
         if (!IsBound)
             return "None";
 
-        var toInputControl = ToInputControl(new InputActionDefinition(LocKey.FromString("binding"), InputType.Digital));
+        var toInputControl = ToInputControl(
+            new InputActionDefinition(LocKey.FromString("binding"), InputType.Digital)
+        );
         return toInputControl?.GuiString ?? $"VK {Vk}";
     }
 
@@ -47,9 +49,12 @@ public struct Binding
 
         var mainInput = new DigitalInput(Vk, GenericDeviceClass.Keyboard);
         var modifiers = new List<InputId>();
-        if (Ctrl) modifiers.Add(KeyboardInputs.Control);
-        if (Alt) modifiers.Add(KeyboardInputs.Alt);
-        if (Shift) modifiers.Add(KeyboardInputs.Shift);
+        if (Ctrl)
+            modifiers.Add(KeyboardInputs.Control);
+        if (Alt)
+            modifiers.Add(KeyboardInputs.Alt);
+        if (Shift)
+            modifiers.Add(KeyboardInputs.Shift);
 
         var composer = InputControlComposer.KeyboardDefault;
         composer.TryCompose(action, mainInput, modifiers, out var control);
@@ -65,10 +70,14 @@ public struct Binding
 
         foreach (var input in control.Inputs)
         {
-            if (input == KeyboardInputs.Control) binding.Ctrl = true;
-            else if (input == KeyboardInputs.Alt) binding.Alt = true;
-            else if (input == KeyboardInputs.Shift) binding.Shift = true;
-            else binding.Vk = input.Index;
+            if (input == KeyboardInputs.Control)
+                binding.Ctrl = true;
+            else if (input == KeyboardInputs.Alt)
+                binding.Alt = true;
+            else if (input == KeyboardInputs.Shift)
+                binding.Shift = true;
+            else
+                binding.Vk = input.Index;
         }
         return binding;
     }

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using ClientPlugin.Patches;
 using Mono.Cecil;
 
-// IMPORTANT: MUST NOT USE A NAMESPACE, otherwise Pulsar won't find the Preloader class! 
+// IMPORTANT: MUST NOT USE A NAMESPACE, otherwise Pulsar won't find the Preloader class!
 //namespace ClientPlugin;
 
 // ReSharper disable once UnusedType.Global
@@ -25,7 +25,7 @@ public static class Preloader
     // ReSharper disable once UnusedMember.Global
     public static void Patch(AssemblyDefinition asmDef)
     {
-        // TODO: Call you preloader patches 
+        // TODO: Call you preloader patches
         ExamplePrepatch.Prepatch(asmDef);
     }
 

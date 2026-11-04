@@ -45,7 +45,10 @@ public class Plugin : IPlugin
             var sharedUi = GameAccess.GetSharedUI();
             if (sharedUi == null)
             {
-                Log.Default.WriteLine(LogSeverity.Warning, $"[{Name}] SharedUIComponent not available");
+                Log.Default.WriteLine(
+                    LogSeverity.Warning,
+                    $"[{Name}] SharedUIComponent not available"
+                );
                 return;
             }
 
@@ -53,7 +56,8 @@ public class Plugin : IPlugin
             var viewModel = new SettingsScreenViewModel(
                 generator.Title,
                 panel => generator.PopulateContent(panel),
-                () => ConfigStorage.Save(Config.Current));
+                () => ConfigStorage.Save(Config.Current)
+            );
 
             sharedUi.CreateScreen<SettingsScreen>(viewModel, showCursor: true);
         }
