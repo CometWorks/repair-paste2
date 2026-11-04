@@ -19,10 +19,7 @@ internal class CheckboxAttribute : Attribute, IElement
 
     public Control BuildRow(string name, Func<object> getter, Action<object> setter)
     {
-        var checkBox = new CheckBox
-        {
-            IsChecked = (bool)getter(),
-        };
+        var checkBox = new CheckBox { IsChecked = (bool)getter() };
 
         checkBox.IsCheckedChanged += (_, _) => setter(checkBox.IsChecked ?? false);
 

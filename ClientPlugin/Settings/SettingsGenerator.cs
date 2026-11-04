@@ -40,7 +40,9 @@ internal class SettingsGenerator
     private static Delegate GetDelegate(MethodInfo methodInfo)
     {
         var methodArgs = methodInfo.GetParameters().Select(p => p.ParameterType).ToArray();
-        var delegateType = Expression.GetDelegateType(methodArgs.Concat(new[] { methodInfo.ReturnType }).ToArray());
+        var delegateType = Expression.GetDelegateType(
+            methodArgs.Concat(new[] { methodInfo.ReturnType }).ToArray()
+        );
         return Delegate.CreateDelegate(delegateType, Config.Current, methodInfo);
     }
 
@@ -53,14 +55,16 @@ internal class SettingsGenerator
             var name = propertyInfo.Name;
             foreach (var attribute in propertyInfo.GetCustomAttributes())
             {
-                if (attribute is not IElement element) continue;
+                if (attribute is not IElement element)
+                    continue;
 
                 if (!ValidateType(propertyInfo.PropertyType, element.SupportedTypes))
                 {
                     throw new Exception(
                         $"Element {element.GetType().Name} for {name} expects "
-                        + $"{string.Join("/", element.SupportedTypes)} but "
-                        + $"received {propertyInfo.PropertyType.FullName}");
+                            + $"{string.Join("/", element.SupportedTypes)} but "
+                            + $"received {propertyInfo.PropertyType.FullName}"
+                    );
                 }
 
                 var info = new AttributeInfo
@@ -80,14 +84,16 @@ internal class SettingsGenerator
 
             foreach (var attribute in methodInfo.GetCustomAttributes())
             {
-                if (attribute is not IElement element) continue;
+                if (attribute is not IElement element)
+                    continue;
 
                 if (!ValidateType(typeof(Delegate), element.SupportedTypes))
                 {
                     throw new Exception(
                         $"Element {element.GetType().Name} for {name} expects "
-                        + $"{string.Join("/", element.SupportedTypes)} but "
-                        + $"received {typeof(Delegate).FullName}");
+                            + $"{string.Join("/", element.SupportedTypes)} but "
+                            + $"received {typeof(Delegate).FullName}"
+                    );
                 }
 
                 var method = GetDelegate(methodInfo);

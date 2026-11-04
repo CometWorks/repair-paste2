@@ -29,7 +29,8 @@ internal static class GameAccess
         if (gameApp == null)
             return null;
 
-        return AccessTools.Method(gameAppType, "GetSharedUI")?.Invoke(gameApp, null) as SharedUIComponent;
+        return AccessTools.Method(gameAppType, "GetSharedUI")?.Invoke(gameApp, null)
+            as SharedUIComponent;
     }
 
     // Retrieves the engine's IViewModelFactory so plugin-constructed DialogViewModels
@@ -40,7 +41,8 @@ internal static class GameAccess
         if (engine == null)
             return null;
 
-        var getMethod = ResolveGenericGet(engine.GetType())?.MakeGenericMethod(typeof(ViewModelFactoryComponent));
+        var getMethod = ResolveGenericGet(engine.GetType())
+            ?.MakeGenericMethod(typeof(ViewModelFactoryComponent));
         return getMethod?.Invoke(engine, new object[] { default(StringId) }) as IViewModelFactory;
     }
 
@@ -48,6 +50,11 @@ internal static class GameAccess
     // Component Get(StringId). Parameter-list matching alone is ambiguous, so filter by
     // IsGenericMethodDefinition before constructing the generic call.
     private static System.Reflection.MethodInfo ResolveGenericGet(Type entityType) =>
-        AccessTools.FirstMethod(entityType,
-            m => m.Name == "Get" && m.IsGenericMethodDefinition && m.GetGenericArguments().Length == 1);
+        AccessTools.FirstMethod(
+            entityType,
+            m =>
+                m.Name == "Get"
+                && m.IsGenericMethodDefinition
+                && m.GetGenericArguments().Length == 1
+        );
 }

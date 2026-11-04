@@ -19,10 +19,7 @@ internal class SeparatorAttribute : Attribute, IElement
 
     public Control BuildRow(string name, Func<object> getter, Action<object> setter)
     {
-        var grid = new Grid
-        {
-            Margin = new Thickness(0, 10, 0, 4),
-        };
+        var grid = new Grid { Margin = new Thickness(0, 10, 0, 4) };
         grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
         grid.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star));
 

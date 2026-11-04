@@ -13,7 +13,13 @@ namespace ClientPlugin.Settings.Elements;
 [AttributeUsage(AttributeTargets.Property)]
 internal class ColorAttribute : Attribute, IElement
 {
-    private enum Source { Rgb, Hsv, Alpha, Hex }
+    private enum Source
+    {
+        Rgb,
+        Hsv,
+        Alpha,
+        Hex,
+    }
 
     public readonly bool HasAlpha;
     public readonly string Label;
@@ -63,7 +69,8 @@ internal class ColorAttribute : Attribute, IElement
 
         void Commit(AvaloniaColor color, Source source)
         {
-            if (updating) return;
+            if (updating)
+                return;
             updating = true;
 
             if (source != Source.Rgb)
@@ -103,18 +110,21 @@ internal class ColorAttribute : Attribute, IElement
 
         void OnRgbChanged()
         {
-            if (updating) return;
+            if (updating)
+                return;
             var color = AvaloniaColor.FromArgb(
                 (byte)aSlider.Value,
                 (byte)rSlider.Value,
                 (byte)gSlider.Value,
-                (byte)bSlider.Value);
+                (byte)bSlider.Value
+            );
             Commit(color, Source.Rgb);
         }
 
         void OnHsvChanged()
         {
-            if (updating) return;
+            if (updating)
+                return;
             var (r, g, b) = HsvToRgb(hSlider.Value, sSlider.Value / 100.0, vSlider.Value / 100.0);
             var color = AvaloniaColor.FromArgb((byte)aSlider.Value, r, g, b);
             Commit(color, Source.Hsv);
@@ -122,12 +132,14 @@ internal class ColorAttribute : Attribute, IElement
 
         void OnAlphaChanged()
         {
-            if (updating) return;
+            if (updating)
+                return;
             var color = AvaloniaColor.FromArgb(
                 (byte)aSlider.Value,
                 (byte)rSlider.Value,
                 (byte)gSlider.Value,
-                (byte)bSlider.Value);
+                (byte)bSlider.Value
+            );
             Commit(color, Source.Alpha);
         }
 
@@ -135,7 +147,8 @@ internal class ColorAttribute : Attribute, IElement
         {
             slider.PropertyChanged += (_, e) =>
             {
-                if (e.Property == RangeBase.ValueProperty) onChange();
+                if (e.Property == RangeBase.ValueProperty)
+                    onChange();
             };
         }
 
@@ -149,7 +162,8 @@ internal class ColorAttribute : Attribute, IElement
 
         textBox.TextChanged += (_, _) =>
         {
-            if (updating) return;
+            if (updating)
+                return;
 
             var text = textBox.Text ?? string.Empty;
             var ok = HasAlpha
@@ -166,10 +180,23 @@ internal class ColorAttribute : Attribute, IElement
             Commit(color, Source.Hex);
         };
 
-        var pickerPanel = BuildPickerPanel(HasAlpha,
-            rSlider, rValueText, gSlider, gValueText, bSlider, bValueText,
-            hSlider, hValueText, sSlider, sValueText, vSlider, vValueText,
-            aSlider, aValueText);
+        var pickerPanel = BuildPickerPanel(
+            HasAlpha,
+            rSlider,
+            rValueText,
+            gSlider,
+            gValueText,
+            bSlider,
+            bValueText,
+            hSlider,
+            hValueText,
+            sSlider,
+            sValueText,
+            vSlider,
+            vValueText,
+            aSlider,
+            aValueText
+        );
 
         var previewButton = new Button
         {
@@ -182,10 +209,20 @@ internal class ColorAttribute : Attribute, IElement
             Flyout = new Flyout { Content = pickerPanel },
         };
 
-        return RowBuilder.NewRow(Tools.Tools.GetLabelOrDefault(name, Label), Description, previewButton, textBox);
+        return RowBuilder.NewRow(
+            Tools.Tools.GetLabelOrDefault(name, Label),
+            Description,
+            previewButton,
+            textBox
+        );
     }
 
-    private static Slider BuildChannelSlider(double min, double max, double initial, out TextBlock valueText)
+    private static Slider BuildChannelSlider(
+        double min,
+        double max,
+        double initial,
+        out TextBlock valueText
+    )
     {
         valueText = new TextBlock
         {
@@ -207,14 +244,23 @@ internal class ColorAttribute : Attribute, IElement
         };
     }
 
-    private static Control BuildPickerPanel(bool hasAlpha,
-        Slider rSlider, TextBlock rText,
-        Slider gSlider, TextBlock gText,
-        Slider bSlider, TextBlock bText,
-        Slider hSlider, TextBlock hText,
-        Slider sSlider, TextBlock sText,
-        Slider vSlider, TextBlock vText,
-        Slider aSlider, TextBlock aText)
+    private static Control BuildPickerPanel(
+        bool hasAlpha,
+        Slider rSlider,
+        TextBlock rText,
+        Slider gSlider,
+        TextBlock gText,
+        Slider bSlider,
+        TextBlock bText,
+        Slider hSlider,
+        TextBlock hText,
+        Slider sSlider,
+        TextBlock sText,
+        Slider vSlider,
+        TextBlock vText,
+        Slider aSlider,
+        TextBlock aText
+    )
     {
         var grid = new Grid
         {
@@ -235,7 +281,13 @@ internal class ColorAttribute : Attribute, IElement
         return grid;
     }
 
-    private static void AddChannelRow(Grid grid, int row, string label, Slider slider, TextBlock valueText)
+    private static void AddChannelRow(
+        Grid grid,
+        int row,
+        string label,
+        Slider slider,
+        TextBlock valueText
+    )
     {
         grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
         var rowMargin = new Thickness(0, 2, 0, 2);
@@ -273,11 +325,16 @@ internal class ColorAttribute : Attribute, IElement
         var delta = max - min;
 
         double h;
-        if (delta < 1e-9) h = 0;
-        else if (max == r) h = 60.0 * (((g - b) / delta) % 6.0);
-        else if (max == g) h = 60.0 * ((b - r) / delta + 2.0);
-        else h = 60.0 * ((r - g) / delta + 4.0);
-        if (h < 0) h += 360.0;
+        if (delta < 1e-9)
+            h = 0;
+        else if (max == r)
+            h = 60.0 * (((g - b) / delta) % 6.0);
+        else if (max == g)
+            h = 60.0 * ((b - r) / delta + 2.0);
+        else
+            h = 60.0 * ((r - g) / delta + 4.0);
+        if (h < 0)
+            h += 360.0;
 
         var s = max < 1e-9 ? 0 : delta / max;
         var v = max;
@@ -306,7 +363,8 @@ internal class ColorAttribute : Attribute, IElement
         return (
             (byte)Math.Round((r1 + m) * 255),
             (byte)Math.Round((g1 + m) * 255),
-            (byte)Math.Round((b1 + m) * 255));
+            (byte)Math.Round((b1 + m) * 255)
+        );
     }
 
     public List<Type> SupportedTypes { get; } = new() { typeof(AvaloniaColor) };

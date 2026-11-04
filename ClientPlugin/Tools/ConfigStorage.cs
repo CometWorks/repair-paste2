@@ -40,7 +40,8 @@ public static class ConfigStorage
         try
         {
             using var reader = File.OpenText(path);
-            return new XmlSerializer(typeof(Config)).Deserialize(reader) as Config ?? Config.Default;
+            return new XmlSerializer(typeof(Config)).Deserialize(reader) as Config
+                ?? Config.Default;
         }
         catch (Exception)
         {
